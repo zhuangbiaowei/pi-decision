@@ -1,6 +1,6 @@
-# pi-jev
+# pi-decision
 
-Semantic tool routing and typed decisions for the [Pi coding agent](https://pi.dev) powered by [TypeSafe](https://typesafe.ai) Jev (System One).
+Semantic tool routing and typed decisions for the [Pi coding agent](https://pi.dev) powered by [TypeSafe](https://typesafe.ai) Jev (System One) or a local llama.cpp decision model.
 
 ## Features
 
@@ -15,20 +15,20 @@ Semantic tool routing and typed decisions for the [Pi coding agent](https://pi.d
 - **Tool Call Guard (opt-in)**: `--jev-tool-guard` / `PI_JEV_TOOL_GUARD=1` / `/jev tool-guard on` intercepts tool calls with Jev to detect hallucinations and enhance failed results. Off by default.
 - **Jev Compaction (opt-in)**: `--jev-compact` / `PI_JEV_COMPACT=1` / `/jev compact on` uses Jev to retain important tool history during `/compact`, while Pi's normal compaction remains the safe fallback.
 - **Agent Orchestration & Typed Agent**: `/jev agents <task>` dispatches `pi-subagents` orchestration; register `agent: "jev"` in workflows for instant sub-second typed judgments without LLM overhead.
-- **Post-Run Gate Check (`jev-gate` CLI)**: Fast binary for subagent `gate` parameters (`npx pi-jev-gate -c "criteria"`). Checks git diff / output and exits 0 on pass or 1 on fail.
+- **Post-Run Gate Check (`jev-gate` CLI)**: Fast binary for subagent `gate` parameters (`npx pi-decision-gate -c "criteria"`). Checks git diff / output and exits 0 on pass or 1 on fail.
 - **On-Demand & Safe**: Runs when called. No unsolicited per-turn API token costs. Fails closed safely: if Jev is unreachable or unconfigured, tool routing does not blindly activate unjudged tools and reports zero confidence on keyword fallbacks.
-- **Cost Clarity**: Tool routing (`jev_find_tools`, `/jev auto`), skill discovery (`jev_find_skill`), evaluations (`jev_evaluate`), Jev subagents (`agent: "jev"`), and gate checks (`pi-jev-gate`) consume a Jev System One request. Heuristic fast-paths like `/jev auto-model`, `/jev thinking`, and topology fallback classify locally without spending Jev requests.
+- **Cost Clarity**: Tool routing (`jev_find_tools`, `/jev auto`), skill discovery (`jev_find_skill`), evaluations (`jev_evaluate`), Jev subagents (`agent: "jev"`), and gate checks (`pi-decision-gate`) consume a Jev System One request. Heuristic fast-paths like `/jev auto-model`, `/jev thinking`, and topology fallback classify locally without spending Jev requests.
 
 ## Installation
 
 ```bash
-pi install npm:pi-jev
+pi install npm:pi-decision
 ```
 
 Or install directly from GitHub:
 
 ```bash
-pi install git:github.com/TheoOliveira/pi-jev
+pi install git:github.com/zhuangbiaowei/pi-decision
 ```
 
 ## Setup
@@ -39,18 +39,18 @@ Set your TypeSafe API key via environment variable:
 export TYPESAFE_API_KEY=ts_...
 ```
 
-For Jev-compatible local servers or proxies, point `pi-jev` at a custom endpoint:
+For Jev-compatible local servers or proxies, point `pi-decision` at a custom endpoint:
 
 ```bash
 export PI_JEV_BASE_URL=http://localhost:8000
 # TYPESAFE_BASE_URL also works, but PI_JEV_BASE_URL wins.
 ```
 
-Custom endpoints may omit `TYPESAFE_API_KEY`; `pi-jev` sends an empty key in that case for unauthenticated local servers such as Laya's `laya-serve`.
+Custom endpoints may omit `TYPESAFE_API_KEY`; `pi-decision` sends an empty key in that case for unauthenticated local servers such as Laya's `laya-serve`.
 
 ### Alternative provider: llama.cpp (OpenAI-compatible decision models)
 
-Besides the TypeSafe Jev protocol, you can point `pi-jev` at any OpenAI-compatible llama.cpp server serving a System One style decision model (e.g. `StartLux-Decision-9B`):
+Besides the TypeSafe Jev protocol, you can point `pi-decision` at any OpenAI-compatible llama.cpp server serving a System One style decision model (e.g. `StartLux-Decision-9B`):
 
 ```bash
 export PI_JEV_PROVIDER=llamacpp
@@ -94,35 +94,35 @@ Toggle at runtime with `/jev auto on` or `/jev auto off` (no argument flips it).
 
 `JEV_THRESHOLD` (in `src/skills.ts`) is the one act/reject cutoff: raise it for precision, lower it for recall. Every path — router, tools, `/jev skills`, auto mode — reads that same constant.
 
-### Jev Gate CLI (`pi-jev-gate` / `jev-gate`)
+### Jev Gate CLI (`pi-decision-gate` / `jev-gate`)
 
-Use `pi-jev-gate` as a post-run gate check for subagents or CI/CD pipelines. Evaluates git diff, file, or stdin against natural language criteria using Jev System One probability.
+Use `pi-decision-gate` as a post-run gate check for subagents or CI/CD pipelines. Evaluates git diff, file, or stdin against natural language criteria using Jev System One probability.
 
 - Exits `0` if evaluation probability meets threshold ($\ge 0.70$ by default).
 - Exits `1` if rejected.
 - Exits `2` on error (or `0` with `--fail-open`).
 
 #### Subagent `gate` Example
-Set a child subagent's `gate` parameter to run `pi-jev-gate` immediately upon completion:
+Set a child subagent's `gate` parameter to run `pi-decision-gate` immediately upon completion:
 
 ```json
 {
   "agent": "worker",
   "task": "Refactor auth middleware to use jose",
-  "gate": "npx pi-jev-gate -c 'Middleware strictly refactored without breaking exports and no new any types' -d -p 0.8"
+  "gate": "npx pi-decision-gate -c 'Middleware strictly refactored without breaking exports and no new any types' -d -p 0.8"
 }
 ```
 
 #### Pipeline / CLI Examples
 ```bash
 # Check git diff against acceptance criteria
-npx pi-jev-gate -c "All exported functions have TypeScript type annotations" --diff
+npx pi-decision-gate -c "All exported functions have TypeScript type annotations" --diff
 
 # Check piped test/linter output
-npm test 2>&1 | npx pi-jev-gate -c "Zero test failures and no unhandled promise rejections"
+npm test 2>&1 | npx pi-decision-gate -c "Zero test failures and no unhandled promise rejections"
 
 # JSON output with custom threshold
-npx pi-jev-gate -c "Documentation updated" -f ./README.md -p 0.85 --json
+npx pi-decision-gate -c "Documentation updated" -f ./README.md -p 0.85 --json
 ```
 
 ### Typed Jev Subagent (`agent: "jev"`)

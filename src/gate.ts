@@ -77,8 +77,8 @@ Options:
   -h, --help                 Show this help message
 
 Examples:
-  subagent gate: "npx pi-jev-gate -c 'Tests pass and no new any types' -d"
-  pipeline gate: "git diff | npx pi-jev-gate -c 'All exports documented'"
+  subagent gate: "npx pi-decision-gate -c 'Tests pass and no new any types' -d"
+  pipeline gate: "git diff | npx pi-decision-gate -c 'All exports documented'"
 `);
 }
 

@@ -2,7 +2,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a potential security vulnerability in `pi-jev`, please do not report it via public GitHub issues.
+If you discover a potential security vulnerability in `pi-decision`, please do not report it via public GitHub issues.
 
 Instead, please email security reports directly to:
 **theophilodamiao@gmail.com**

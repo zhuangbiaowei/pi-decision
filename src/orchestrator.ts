@@ -209,7 +209,7 @@ export class AgentOrchestrator {
           version: 1,
           requestId,
           method: "spawn",
-          source: { extension: "pi-jev" },
+          source: { extension: "pi-decision" },
           params: {
             async: true,
             script: workflowScript,

@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 import { isJevTool } from "./types.js";
 
 export interface ToolCallCheckResult {
@@ -15,7 +15,7 @@ export class ToolGuard {
 
   constructor(
     private pi: ExtensionAPI,
-    private jevClient: JevClient,
+    private jevClient: EvaluatorClient,
     enabled = false
   ) {
     this.enabled = enabled;

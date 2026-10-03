@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 import type { ToolRouter } from "./router.js";
 import type { SkillRouter } from "./skills.js";
 import { JEV_THRESHOLD, skillApplicabilityQuestion } from "./skills.js";
@@ -39,7 +39,7 @@ export class AutoJev {
   private running = false;
 
   constructor(
-    private jevClient: Pick<JevClient, "isConfigured" | "evaluate">,
+    private jevClient: Pick<EvaluatorClient, "isConfigured" | "evaluate">,
     private router: Pick<ToolRouter, "shortlist" | "activateTools">,
     private skillRouter: Pick<SkillRouter, "getAvailableSkills" | "shortlist">,
     enabled = false

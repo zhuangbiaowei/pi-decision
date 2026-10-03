@@ -1,6 +1,5 @@
 import type { ExtensionAPI, ExtensionCommandContext, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
-import type { NoulQuestionConfig, QuestionConfig } from "./types.js";
+import type { EvaluatorClient, NoulQuestionConfig, QuestionConfig } from "./types.js";
 
 /** Single activation cutoff for Jev probabilities. Raise to reduce noise, lower for recall. */
 export const JEV_THRESHOLD = 0.65;
@@ -36,9 +35,9 @@ export function skillApplicabilityQuestion(index: number): NoulQuestionConfig {
 
 export class SkillRouter {
   private pi: Pick<ExtensionAPI, "getCommands">;
-  private jevClient: Pick<JevClient, "isConfigured" | "evaluate">;
+  private jevClient: Pick<EvaluatorClient, "isConfigured" | "evaluate">;
 
-  constructor(pi: Pick<ExtensionAPI, "getCommands">, jevClient: Pick<JevClient, "isConfigured" | "evaluate">) {
+  constructor(pi: Pick<ExtensionAPI, "getCommands">, jevClient: Pick<EvaluatorClient, "isConfigured" | "evaluate">) {
     this.pi = pi;
     this.jevClient = jevClient;
   }

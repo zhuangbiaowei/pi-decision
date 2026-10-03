@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import { execSync } from "node:child_process";
-import { JevClient } from "./jev.js";
-import type { JevAnswerResult } from "./types.js";
+import { createEvaluator } from "./provider.js";
+import type { EvaluatorClient, JevAnswerResult } from "./types.js";
 
 export interface GateOptions {
   criteria: string;
@@ -119,8 +119,8 @@ export function resolveGateState(options: GateOptions): string {
   return "No state provided.";
 }
 
-export async function evaluateGate(options: GateOptions, jevClient?: JevClient): Promise<GateResult> {
-  const client = jevClient ?? new JevClient();
+export async function evaluateGate(options: GateOptions, jevClient?: EvaluatorClient): Promise<GateResult> {
+  const client = jevClient ?? createEvaluator();
   const threshold = options.threshold ?? 0.7;
 
   if (!options.criteria.trim()) {

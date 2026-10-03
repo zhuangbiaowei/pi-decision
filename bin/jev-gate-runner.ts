@@ -1,12 +1,12 @@
 import { parseGateArgs, evaluateGate } from "../src/gate.js";
-import { JevClient } from "../src/jev.js";
+import { createEvaluator } from "../src/provider.js";
 
 async function main() {
   const args = process.argv.slice(2);
   const options = parseGateArgs(args);
 
   try {
-    const client = new JevClient();
+    const client = createEvaluator();
     const result = await evaluateGate(options, client);
 
     if (options.json) {

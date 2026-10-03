@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import { JevClient } from "../src/jev.js";
+import { createEvaluator } from "../src/provider.js";
 import { ToolRouter } from "../src/router.js";
 import { SkillRouter } from "../src/skills.js";
 import { AutoJev } from "../src/auto.js";
@@ -22,7 +22,7 @@ function envAutoEnabled(): boolean {
 }
 
 export default function (pi: ExtensionAPI) {
-  const jevClient = new JevClient();
+  const jevClient = createEvaluator();
   const router = new ToolRouter(pi, jevClient);
   const skillRouter = new SkillRouter(pi, jevClient);
 

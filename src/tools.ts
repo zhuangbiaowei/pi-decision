@@ -1,6 +1,6 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "@sinclair/typebox";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 import type { ToolRouter } from "./router.js";
 import type { SkillRouter } from "./skills.js";
 import type { QuestionConfig } from "./types.js";
@@ -8,7 +8,7 @@ import { JEV_THRESHOLD } from "./skills.js";
 
 export function registerJevTools(
   pi: ExtensionAPI,
-  jevClient: JevClient,
+  jevClient: EvaluatorClient,
   router: ToolRouter,
   skillRouter: SkillRouter
 ): void {
@@ -54,7 +54,9 @@ export function registerJevTools(
       }
 
       if (result.fallbackUsed) {
-        summaryText += " (Note: local heuristic shortlist used due to Jev unconfigured/offline)";
+        summaryText += result.error
+          ? ` (Note: local heuristic shortlist used because the evaluator failed: ${result.error})`
+          : " (Note: local heuristic shortlist used due to Jev unconfigured/offline)";
       }
 
       return {

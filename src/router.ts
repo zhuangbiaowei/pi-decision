@@ -1,5 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 import { JEV_TOOL_NAMES, isJevTool } from "./types.js";
 import { JEV_THRESHOLD } from "./skills.js";
 
@@ -17,14 +17,15 @@ export interface RouterResult {
   probabilities: Record<string, number>;
   fallbackUsed: boolean;
   elapsedMs: number;
+  error?: string;
 }
 
 export class ToolRouter {
   private pi: ExtensionAPI;
-  private jevClient: JevClient;
+  private jevClient: EvaluatorClient;
   private managedTools = new Set<string>();
 
-  constructor(pi: ExtensionAPI, jevClient: JevClient) {
+  constructor(pi: ExtensionAPI, jevClient: EvaluatorClient) {
     this.pi = pi;
     this.jevClient = jevClient;
   }
@@ -93,6 +94,7 @@ export class ToolRouter {
     const probabilities: Record<string, number> = {};
     const activated: string[] = [];
     let fallbackUsed = false;
+    let error: string | undefined;
 
     if (this.jevClient.isConfigured()) {
       try {
@@ -119,8 +121,9 @@ export class ToolRouter {
             activated.push(toolName);
           }
         }
-      } catch (err) {
+      } catch (err: any) {
         fallbackUsed = true;
+        error = err?.message || String(err);
       }
     } else {
       fallbackUsed = true;
@@ -142,6 +145,7 @@ export class ToolRouter {
       probabilities,
       fallbackUsed,
       elapsedMs: Date.now() - startTime,
+      error,
     };
   }
 }

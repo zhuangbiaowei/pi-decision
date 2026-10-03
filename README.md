@@ -48,6 +48,19 @@ export PI_JEV_BASE_URL=http://localhost:8000
 
 Custom endpoints may omit `TYPESAFE_API_KEY`; `pi-jev` sends an empty key in that case for unauthenticated local servers such as Laya's `laya-serve`.
 
+### Alternative provider: llama.cpp (OpenAI-compatible decision models)
+
+Besides the TypeSafe Jev protocol, you can point `pi-jev` at any OpenAI-compatible llama.cpp server serving a System One style decision model (e.g. `StartLux-Decision-9B`):
+
+```bash
+export PI_JEV_PROVIDER=llamacpp
+export PI_LLAMACPP_BASE_URL=http://192.168.1.48:8081
+# optional, defaults to StartLux-Decision-9B-Q8_0
+export PI_LLAMACPP_MODEL=StartLux-Decision-9B-Q8_0
+```
+
+`PI_JEV_PROVIDER` selects the backend: `typesafe` (default, also `jev`) uses the TypeSafe Jev SDK; `llamacpp` (also `llama-cpp`, `llama`, `openai`) translates every `evaluate()` call into a `/v1/chat/completions` request and parses the JSON answer back into the same `choice`/`noul`/`score` primitives. No API key is needed for the llama.cpp provider. `LLAMACPP_BASE_URL` / `LLAMACPP_MODEL` are also accepted as fallbacks when the `PI_`-prefixed names are unset.
+
 Or store your TypeSafe key in Pi's secret store file:
 
 ```bash

@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 
 const RPC_REQUEST = "subagents:rpc:v1:request";
 const RPC_REPLY = "subagents:rpc:v1:reply:";
@@ -30,7 +30,7 @@ export function classifyTopologyFallback(task: string): OrchestrationTopology {
 
 export async function determineTopology(
   task: string,
-  jevClient?: JevClient,
+  jevClient?: EvaluatorClient,
   signal?: AbortSignal
 ): Promise<OrchestrationTopology> {
   if (jevClient?.isConfigured()) {
@@ -164,7 +164,7 @@ export class AgentOrchestrator {
 
   constructor(
     private pi: ExtensionAPI,
-    private jevClient?: JevClient,
+    private jevClient?: EvaluatorClient,
     enabled = false
   ) {
     this.enabled = enabled;

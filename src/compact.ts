@@ -1,5 +1,5 @@
 import type { ExtensionContext } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 
 export interface CompactResult {
   summary: string;
@@ -27,7 +27,7 @@ function isCandidate(entry: any): boolean {
 export class JevCompactor {
   public enabled: boolean;
 
-  constructor(private jevClient: JevClient, enabled = false) {
+  constructor(private jevClient: EvaluatorClient, enabled = false) {
     this.enabled = enabled;
   }
 

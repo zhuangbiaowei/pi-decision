@@ -1,6 +1,5 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
-import type { QuestionConfig, JevEvaluationResponse } from "./types.js";
+import type { EvaluatorClient, QuestionConfig, JevEvaluationResponse } from "./types.js";
 
 const RPC_REQUEST = "subagents:rpc:v1:request";
 const RPC_REPLY = "subagents:rpc:v1:reply:";
@@ -27,7 +26,7 @@ export interface JevAgentResult {
 
 export async function executeJevAgentTask(
   params: JevAgentTaskParams,
-  client: JevClient,
+  client: EvaluatorClient,
   signal?: AbortSignal
 ): Promise<JevAgentResult> {
   if (!client.isConfigured()) {
@@ -82,7 +81,7 @@ export async function executeJevAgentTask(
 }
 
 export class JevAgentHandler {
-  constructor(private pi: ExtensionAPI, private jevClient: JevClient) {}
+  constructor(private pi: ExtensionAPI, private jevClient: EvaluatorClient) {}
 
   public install(): void {
     // Listen for subagent RPC calls directed at agent 'jev' or 'typesafe-jev'

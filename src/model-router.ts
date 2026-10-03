@@ -1,6 +1,6 @@
 import type { ExtensionContext, ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import type { Model } from "@earendil-works/pi-ai";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 
 export type ModelProfile = "fast" | "balanced" | "reasoning" | "long-context" | "vision" | "url";
 export type ModelErrorKind = "quota" | "rate-limit" | "context-limit" | "unavailable" | "timeout" | "auth" | "unknown";
@@ -176,7 +176,7 @@ export class AutoModelRouter {
   private blocked = new Map<string, number>();
   public last?: ModelRouteResult;
 
-  constructor(private pi: ExtensionAPI, enabled = false, private jevClient?: JevClient) {
+  constructor(private pi: ExtensionAPI, enabled = false, private jevClient?: EvaluatorClient) {
     this.enabled = enabled;
   }
 

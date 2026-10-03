@@ -3,6 +3,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as os from "node:os";
 import type {
+  EvaluatorClient,
   JevEvaluationRequest,
   JevEvaluationResponse,
   JevAnswerResult,
@@ -43,7 +44,7 @@ export function resolveApiKeySource(): { key: string; source: ApiKeySource; orig
   return null;
 }
 
-export class JevClient {
+export class JevClient implements EvaluatorClient {
   private client: TypeSafeClient | null = null;
   private apiKey: string | null = null;
   private apiKeySetInSession = false;

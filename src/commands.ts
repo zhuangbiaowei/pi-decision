@@ -1,5 +1,5 @@
 import type { ExtensionAPI, ExtensionCommandContext } from "@earendil-works/pi-coding-agent";
-import type { JevClient } from "./jev.js";
+import type { EvaluatorClient } from "./types.js";
 import type { ToolRouter } from "./router.js";
 import type { SkillRouter } from "./skills.js";
 import type { AutoJev } from "./auto.js";
@@ -12,10 +12,11 @@ import { designEvaluation } from "./designer.js";
 import type { JevEvaluationRequest } from "./types.js";
 import { JEV_TOOL_NAMES, isJevTool } from "./types.js";
 import { JEV_THRESHOLD } from "./skills.js";
+import { resolveProvider } from "./provider.js";
 
 export function registerJevCommands(
   pi: ExtensionAPI,
-  jevClient: JevClient,
+  jevClient: EvaluatorClient,
   router: ToolRouter,
   skillRouter: SkillRouter,
   auto: AutoJev,
@@ -51,6 +52,7 @@ export function registerJevCommands(
 
         ctx.ui.notify(
           `Jev Status:\n` +
+            `• Provider: ${resolveProvider()}\n` +
             `• Configured: ${origin || endpoint ? `Yes${origin ? ` (from ${origin})` : " (custom endpoint, no API key)"}` : "No"}\n` +
             `• Endpoint: ${endpoint ?? "TypeSafe default"}\n` +
             `• Requests in session: ${jevClient.stats.requestsCount}\n` +
@@ -76,7 +78,9 @@ export function registerJevCommands(
       if (sub === "test" || sub === "eval" || sub === "evaluate") {
         if (!jevClient.isConfigured()) {
           ctx.ui.notify(
-            "Cannot run evaluation: no TypeSafe API key or compatible endpoint. Set TYPESAFE_API_KEY, write ~/.pi/agent/secrets/typesafe_api_key, or set PI_JEV_BASE_URL.",
+            resolveProvider() === "llamacpp"
+              ? "Cannot run evaluation: llama.cpp provider is not configured. Set PI_LLAMACPP_BASE_URL (and optionally PI_LLAMACPP_MODEL)."
+              : "Cannot run evaluation: no TypeSafe API key or compatible endpoint. Set TYPESAFE_API_KEY, write ~/.pi/agent/secrets/typesafe_api_key, or set PI_JEV_BASE_URL.",
             "error"
           );
           return;

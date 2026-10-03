@@ -3,7 +3,7 @@
 // Add --legacy to compare the previous applicability question with identical inputs.
 import * as fs from "node:fs";
 import { SkillRouter, JEV_THRESHOLD } from "../src/skills.js";
-import { JevClient } from "../src/jev.js";
+import { createEvaluator } from "../src/provider.js";
 import type { JevEvaluationRequest, JevEvaluationResponse, QuestionConfig } from "../src/types.js";
 import { cases, skills } from "../test/fixtures/skill-routing.js";
 
@@ -18,7 +18,7 @@ const option = (name: string) => {
 const repeats = Number(option("--repeats") ?? 1);
 if (!Number.isInteger(repeats) || repeats < 1 || repeats > 10) throw new Error("--repeats must be between 1 and 10");
 const legacy = process.argv.includes("--legacy");
-const jev = new JevClient();
+const jev = createEvaluator();
 if (!jev.isConfigured()) throw new Error("Jev is not configured");
 const responses: JevEvaluationResponse[] = [];
 const router = new SkillRouter({

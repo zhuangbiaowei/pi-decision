@@ -59,3 +59,21 @@ export interface JevSessionStats {
   lastElapsedMs?: number;
   lastError?: string;
 }
+
+/**
+ * The single service boundary every feature consumes. Both the TypeSafe Jev
+ * client and alternative providers (e.g. a llama.cpp OpenAI-compatible
+ * decision model) implement this, so routing, skills, auto mode, tool guard,
+ * compaction, orchestration, subagents and the gate CLI never know which
+ * backend is behind `evaluate()`.
+ */
+export interface EvaluatorClient {
+  stats: JevSessionStats;
+  isConfigured(): boolean;
+  evaluate(
+    request: JevEvaluationRequest,
+    signal?: AbortSignal
+  ): Promise<JevEvaluationResponse>;
+  getKeyOrigin(): string | null;
+  getBaseURL(): string | null;
+}
